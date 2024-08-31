@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from 'react';
 import { CustomerField } from '@/app/lib/definitions';
 import Link from 'next/link';
 import {
@@ -7,11 +10,30 @@ import {
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
+import { createInvoice } from '@/app/lib/actions';
 
 export default function Form({ customers }: { customers: CustomerField[] }) {
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const result = await createInvoice(formData);
+    if (result.success) {
+      setSuccessMessage(result.message);
+      form.reset(); // Reset the form data
+    }
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
+        {successMessage && (
+          <div className="mb-4 rounded-md bg-green-100 p-4 text-green-700">
+            {successMessage}
+          </div>
+        )}
         {/* Customer Name */}
         <div className="mb-4">
           <label htmlFor="customer" className="mb-2 block text-sm font-medium">

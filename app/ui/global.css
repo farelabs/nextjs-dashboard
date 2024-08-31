@@ -16,3 +16,15 @@ input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+.loader {
+  animation: loader 3s linear forwards;
+}
+
+@keyframes loader {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}

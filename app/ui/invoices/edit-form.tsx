@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { CustomerField, InvoiceForm } from '@/app/lib/definitions';
 import {
   CheckIcon,
@@ -9,6 +10,7 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
+import { updateInvoice } from '@/app/lib/actions';
 
 export default function EditInvoiceForm({
   invoice,
@@ -17,9 +19,35 @@ export default function EditInvoiceForm({
   invoice: InvoiceForm;
   customers: CustomerField[];
 }) {
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [showMessage, setShowMessage] = useState<boolean>(false);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const result = await updateInvoice(invoice.id, formData);
+    if (result.success) {
+      setSuccessMessage(result.message);
+      setShowMessage(true);
+      setTimeout(() => {
+        setShowMessage(false);
+        setSuccessMessage(null); // Clear the success message
+      }, 3000);
+    }
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
+        {showMessage && (
+          <div className="relative mb-4 rounded-md bg-green-100 p-4 text-green-700">
+            {successMessage}
+            <div className="absolute bottom-0 left-0 h-1 w-full bg-green-200">
+              <div className="h-full bg-green-700 loader"></div>
+            </div>
+          </div>
+        )}
         {/* Customer Name */}
         <div className="mb-4">
           <label htmlFor="customer" className="mb-2 block text-sm font-medium">
