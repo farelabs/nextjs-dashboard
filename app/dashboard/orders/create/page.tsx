@@ -57,7 +57,7 @@ const SampleSubmissionForm = () => {
     exportCountry: '',
   });
 
-  const handleInputChange = (e) => {
+  const handleInputChange = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
@@ -70,7 +70,7 @@ const SampleSubmissionForm = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 0));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = () => {
     e.preventDefault();
     console.log('Form submitted:', formData);
     // Here you would typically send the data to your backend
